@@ -2,23 +2,49 @@ import { Link } from '@tanstack/react-router'
 import { Trash2Icon } from 'lucide-react'
 import { Checkbox } from './ui/checkbox'
 import { IconButton } from './ui/icon-button'
+import type { ComponentProps } from 'react'
+import { twMerge } from 'tailwind-merge'
+import { formatDistanceToNow } from 'date-fns'
 
-export function WebhooksListItem() {
+interface WebhookListItemProps extends ComponentProps<'div'> {
+  webhook: {
+    id: string
+    method: string
+    pathname: string
+    createdAt: Date
+  }
+}
+
+export function WebhooksListItem({
+  className,
+  webhook,
+  ...props
+}: WebhookListItemProps) {
   return (
-    <div className="group rounded-lg transition-colors duration-150 hover:bg-zinc-700/30">
+    <div
+      className={twMerge(
+        'group rounded-lg transition-colors duration-150 hover:bg-zinc-700/30',
+        className,
+      )}
+      {...props}
+    >
       <div className="flex items-start gap-3 px-4 py-2.5">
         <Checkbox />
 
-        <Link to="/" className="flex flex-1 min-w-0 items-start gap-3">
+        <Link
+          to="/webhooks/$id"
+          params={{ id: webhook.id }}
+          className="flex flex-1 min-w-0 items-start gap-3"
+        >
           <span className="w-12 shrink-0 font-mono text-xs font-semibold text-zinc-400 text-right">
-            POST
+            {webhook.method}
           </span>
           <div className="flex-1 min-w-0 ">
             <p className="truncate text-sm text-zinc-200 leading-tight font-mono">
-              /video/status
+              {webhook.pathname}
             </p>
             <p className="text-xs text-zinc-500 font-medium mt-1">
-              1 minute ago
+              {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
             </p>
           </div>
         </Link>
