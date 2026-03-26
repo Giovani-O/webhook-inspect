@@ -12,6 +12,7 @@
     "biome:fix": "biome check --write"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.3.3",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-router": "^1.168.4",
     "@tanstack/react-router-devtools": "^1.166.11",

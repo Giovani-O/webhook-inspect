@@ -3,7 +3,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 // Forma interessante de criar variantes com tailwind-variants...
 const iconButton = tv({
-  base: 'flex items-center justify-center rounded-lg hover:bg-zinc-700 transition-colors duration-150',
+  base: 'flex items-center justify-center rounded-lg cursor-pointer hover:bg-zinc-700 transition-colors duration-150',
   variants: {
     size: {
       sm: 'size-6',
