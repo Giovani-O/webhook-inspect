@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 
 interface CheckboxProps extends RadixCheckbox.CheckboxProps {}
 
-export function Checkbox(props: CheckboxProps) {
+export function Checkbox({ ...props }: Readonly<CheckboxProps>) {
   return (
     <RadixCheckbox.Root
       className={twMerge(
