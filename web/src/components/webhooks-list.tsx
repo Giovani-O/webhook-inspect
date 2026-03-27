@@ -1,8 +1,10 @@
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { Loader2, Wand2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { webhookListSchema } from '../http/schemas/webhooks'
 import { WebhooksListItem } from './webhooks-list-item'
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
+import { CodeBlock } from './ui/code-block'
 
 export function WebhooksList() {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -12,6 +14,7 @@ export function WebhooksList() {
   const [generatedHandlerCode, setGeneratedHandlerCode] = useState<
     string | null
   >(null)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
@@ -78,6 +81,7 @@ export function WebhooksList() {
   const hasAnyWebhookChecked = checkedWebhookIds.length > 0
 
   async function handleGenerateHandler() {
+    setIsGenerating(true)
     const response = await fetch('http://localhost:3333/api/generate', {
       method: 'POST',
       body: JSON.stringify({ webhookIds: checkedWebhookIds }),
@@ -91,6 +95,7 @@ export function WebhooksList() {
     const data: GenerateResponse = await response.json()
 
     setGeneratedHandlerCode(data.code)
+    setIsGenerating(false)
   }
 
   return (
@@ -99,11 +104,15 @@ export function WebhooksList() {
         <div className="space-y-1 p-2">
           <button
             type="button"
-            disabled={!hasAnyWebhookChecked}
-            className="bg-indigo-400 mb-3 text-white w-full rounded-lg flex items-center justify-center gap-3 font-medium text-sm py-2 disabled:opacity-50"
+            disabled={!hasAnyWebhookChecked || isGenerating}
+            className="bg-indigo-400 mb-3 text-white w-full rounded-lg flex items-center justify-center gap-3 font-medium text-sm py-2 cursor-pointer disabled:opacity-50"
             onClick={() => handleGenerateHandler()}
           >
-            <Wand2 className="size-4" />
+            {isGenerating ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Wand2 className="size-4" />
+            )}
             Gerar handler
           </button>
 
@@ -130,17 +139,19 @@ export function WebhooksList() {
         )}
       </div>
 
-      {/*{!!generatedHandlerCode && (
-            <Dialog.Root defaultOpen>
-              <Dialog.Overlay className="bg-black/60 inset-0 fixed z-20" />
+      {!!generatedHandlerCode && (
+        <Dialog.Root defaultOpen>
+          <Dialog.Overlay className="bg-black/60 inset-0 fixed z-20" />
 
-              <Dialog.Content className="flex items-center justify-center fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 z-40">
-                <div className="bg-zinc-900 w-[600px] p-4 rounded-lg border border-zinc-800 max-h-[620px] overflow-y-auto">
-                  <CodeBlock language="typescript" code={generatedHandlerCode} />
-                </div>
-              </Dialog.Content>
-            </Dialog.Root>
-          )}*/}
+          <Dialog.Content className="flex items-center justify-center fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 z-40">
+            <Dialog.Title></Dialog.Title>
+
+            <div className="bg-zinc-900 w-[60vw] p-4 rounded-lg border border-zinc-800 max-h-[620px] overflow-y-auto">
+              <CodeBlock language="typescript" code={generatedHandlerCode} />
+            </div>
+          </Dialog.Content>
+        </Dialog.Root>
+      )}
     </>
   )
 }
