@@ -51,6 +51,15 @@ cd web && pnpm dev
 | ALL | `/capture/*` | Capture incoming webhooks |
 | POST | `/api/generate` | Generate AI response handler |
 
+Here's an example of how to use the /capture route:
+
+```bash
+curl -X POST http://localhost:3333/capture/my-webhook \
+  -H "Content-Type: application/json" \
+  -H "X-Custom-Header: value" \
+  -d '{"message": "hello"}'
+```
+
 ## Scripts
 
 ### API (run from `api/`)
