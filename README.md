@@ -57,6 +57,7 @@ cd web && pnpm dev
 - `pnpm db:generate` - Generate migrations
 - `pnpm db:migrate` - Run migrations
 - `pnpm db:studio` - Open Drizzle Studio
+- `pnpm db:seed` - Run seed script
 
 ### Web
 

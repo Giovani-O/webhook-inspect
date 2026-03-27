@@ -189,6 +189,8 @@ function generateStripePayload(eventType: string): Record<string, unknown> {
 }
 
 async function main() {
+  await db.delete(webhooks)
+
   console.log('Seeding database with 60 Stripe webhooks...')
 
   const webhookRecords = Array.from({ length: 60 }, () => {
@@ -210,7 +212,7 @@ async function main() {
         accept: '*/*',
         'stripe-version': '2024-04-10',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload, null, 2),
       createdAt: faker.date.recent({ days: 30 }),
     }
   })

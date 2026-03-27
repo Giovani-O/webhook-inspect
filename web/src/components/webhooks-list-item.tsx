@@ -5,6 +5,7 @@ import { IconButton } from './ui/icon-button'
 import type { ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNow } from 'date-fns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface WebhookListItemProps extends ComponentProps<'div'> {
   webhook: {
@@ -20,6 +21,21 @@ export function WebhooksListItem({
   webhook,
   ...props
 }: WebhookListItemProps) {
+  const queryClient = useQueryClient()
+
+  const { mutate: deleteWebhook } = useMutation({
+    mutationFn: async (id: string) => {
+      await fetch(`http://localhost:3333/api/webhooks/${id}`, {
+        method: 'DELETE',
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['webhooks'],
+      })
+    },
+  })
+
   return (
     <div
       className={twMerge(
@@ -52,6 +68,7 @@ export function WebhooksListItem({
         <IconButton
           icon={<Trash2Icon className="size-3.5 text-zinc-400" />}
           className="opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+          onClick={() => deleteWebhook(webhook.id)}
         />
       </div>
     </div>
