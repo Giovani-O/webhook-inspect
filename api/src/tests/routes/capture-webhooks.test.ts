@@ -40,7 +40,6 @@ describe('POST /capture/*', () => {
       headers: { 'content-type': 'application/json' },
     })
 
-    // Fetch the stored webhook via the list endpoint to verify pathname
     const listRes = await app.inject({ method: 'GET', url: '/api/webhooks' })
     const { webhooks } = listRes.json()
 
