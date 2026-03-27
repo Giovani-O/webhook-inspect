@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Trash2Icon } from 'lucide-react'
 import { Checkbox } from './ui/checkbox'
 import { IconButton } from './ui/icon-button'
-import type { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNow } from 'date-fns'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -14,11 +14,15 @@ interface WebhookListItemProps extends ComponentProps<'div'> {
     pathname: string
     createdAt: Date
   }
+  onWebhookChecked: (webhookId: string) => void
+  isWebhookChecked: boolean
 }
 
 export function WebhooksListItem({
   className,
   webhook,
+  onWebhookChecked,
+  isWebhookChecked,
   ...props
 }: WebhookListItemProps) {
   const queryClient = useQueryClient()
@@ -45,7 +49,10 @@ export function WebhooksListItem({
       {...props}
     >
       <div className="flex items-start gap-3 px-4 py-2.5">
-        <Checkbox />
+        <Checkbox
+          onCheckedChange={() => onWebhookChecked(webhook.id)}
+          checked={isWebhookChecked}
+        />
 
         <Link
           to="/webhooks/$id"
