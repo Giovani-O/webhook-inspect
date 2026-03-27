@@ -65,13 +65,19 @@ curl -X POST http://localhost:3333/capture/my-webhook \
 ### API (run from `api/`)
 
 ```bash
-pnpm dev              # Start development server
-pnpm start            # Start production server (requires build)
-pnpm db:generate      # Generate Drizzle migrations
-pnpm db:migrate       # Run database migrations
-pnpm db:studio        # Open Drizzle Studio
-pnpm db:seed          # Seed database
-pnpm biome:fix        # Format + lint + fix
+pnpm dev # Start development server
+pnpm start # Start production server (requires build)
+pnpm db:generate # Generate Drizzle migrations
+pnpm db:migrate # Run database migrations
+pnpm db:studio # Open Drizzle Studio
+pnpm db:seed # Seed database
+pnpm biome:fix # Format + lint + fix
+
+# Testing
+pnpm test # Run all tests
+pnpm test:watch # Run tests in watch mode
+pnpm test:coverage # Run tests with coverage
+pnpm vitest run src/tests/routes/list-webhooks.test.ts # Run single test
 ```
 
 ### Web (run from `web/`)
