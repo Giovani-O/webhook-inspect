@@ -56,7 +56,7 @@ export const captureWebhook: FastifyPluginAsyncZod = async (app) => {
         })
         .returning()
 
-      return reply.send({ id: result[0].id })
+      return reply.status(201).send({ id: result[0].id })
     },
   )
 }
