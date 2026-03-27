@@ -1,9 +1,9 @@
-import { db } from '@/db'
-import { webhooks } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+import { db } from '@/db'
+import { webhooks } from '@/db/schema'
 
 export const captureWebhook: FastifyPluginAsyncZod = async (app) => {
   app.all(
@@ -19,7 +19,7 @@ export const captureWebhook: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
-      const pathname = new URL(request.url).pathname.replace('/capture', '')
+      const pathname = request.url.replace('/capture', '')
       const method = request.method
       const ip = request.ip
       const contentType = request.headers['content-type']

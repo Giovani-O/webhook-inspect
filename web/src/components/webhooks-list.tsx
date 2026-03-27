@@ -11,6 +11,7 @@ export function WebhooksList() {
   const observerRef = useRef<IntersectionObserver>(null)
 
   const [checkedWebhookIds, setCheckedWebhokIds] = useState<string[]>([])
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [generatedHandlerCode, setGeneratedHandlerCode] = useState<
     string | null
   >(null)
@@ -95,6 +96,7 @@ export function WebhooksList() {
     const data: GenerateResponse = await response.json()
 
     setGeneratedHandlerCode(data.code)
+    setIsDialogOpen(true)
     setIsGenerating(false)
   }
 
@@ -140,7 +142,13 @@ export function WebhooksList() {
       </div>
 
       {!!generatedHandlerCode && (
-        <Dialog.Root defaultOpen>
+        <Dialog.Root
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            setIsDialogOpen(open)
+            if (!open) setGeneratedHandlerCode(null)
+          }}
+        >
           <Dialog.Overlay className="bg-black/60 inset-0 fixed z-20" />
 
           <Dialog.Content className="flex items-center justify-center fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 z-40">
